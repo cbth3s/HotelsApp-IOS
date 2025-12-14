@@ -2,9 +2,18 @@ import UIKit
 import Combine
 
 class DetailsViewController: UIViewController {
-    var viewModel: DetailsViewModel!
+    let viewModel: DetailsViewModel
     weak var coordinator: Coordinator?
     private var cancellables = Set<AnyCancellable>()
+    
+    init(viewModel: DetailsViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     // MARK: Hotel Image Section
     private let hotelImageView: UIImageView = {

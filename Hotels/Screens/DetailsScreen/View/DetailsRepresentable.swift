@@ -13,8 +13,7 @@ struct DetailsRepresentable: UIViewControllerRepresentable {
     }
     
     func makeUIViewController(context: Context) -> DetailsViewController {
-        let viewController = DetailsViewController()
-        viewController.viewModel = viewModel
+        let viewController = DetailsViewController(viewModel: viewModel)
         viewController.coordinator = coordinator
         return viewController
     }
