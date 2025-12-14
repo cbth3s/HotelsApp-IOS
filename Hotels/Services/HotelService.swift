@@ -20,28 +20,54 @@ final class HotelService: HotelServiceProtocol {
     }
     
     func loadHotelInfo() async throws -> [HotelModel] {
-        guard let url = APIEndpoint.hotelList() else {
-            throw URLError(.badURL)
+        do {
+            guard let url = APIEndpoint.localHotelList() else {
+                throw URLError(.badURL)
+            }
+            let data = try await networkService.fetchData(from: url)
+            let result = try decoder.decode([HotelModel].self, from: data)
+            return result
+        } catch {
+            guard let url = APIEndpoint.hotelList() else {
+                throw URLError(.badURL)
+            }
+            let data = try await networkService.fetchData(from: url)
+            let result = try decoder.decode([HotelModel].self, from: data)
+            return result
         }
-        let data = try await networkService.fetchData(from: url)
-        let result = try decoder.decode([HotelModel].self, from: data)
-        return result
     }
     
     func loadDetailsHotel(hotelID: Int) async throws -> DetailsHotelModel? {
-        guard let url = APIEndpoint.hotelDetails(id: hotelID) else {
-            throw URLError(.badURL)
+        do {
+            guard let url = APIEndpoint.localHotelDetails(id: hotelID) else {
+                throw URLError(.badURL)
+            }
+            let data = try await networkService.fetchData(from: url)
+            let result = try decoder.decode(DetailsHotelModel.self, from: data)
+            return result
+        } catch {
+            guard let url = APIEndpoint.hotelDetails(id: hotelID) else {
+                throw URLError(.badURL)
+            }
+            let data = try await networkService.fetchData(from: url)
+            let result = try decoder.decode(DetailsHotelModel.self, from: data)
+            return result
         }
-        let data = try await networkService.fetchData(from: url)
-        let result = try decoder.decode(DetailsHotelModel.self, from: data)
-        return result
     }
     
     func loadImage(image: String) async throws -> Data {
-        guard let url = APIEndpoint.hotelImage(name: image) else {
-            throw URLError(.badURL)
+        do {
+            guard let url = APIEndpoint.localLoadImage(path: image) else {
+                throw URLError(.badURL)
+            }
+            let data = try await networkService.fetchData(from: url)
+            return data
+        } catch {
+            guard let url = APIEndpoint.hotelImage(name: image) else {
+                throw URLError(.badURL)
+            }
+            let data = try await networkService.fetchData(from: url)
+            return data
         }
-        let data = try await networkService.fetchData(from: url)
-        return data
     }
 }
