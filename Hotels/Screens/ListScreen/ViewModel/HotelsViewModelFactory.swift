@@ -2,13 +2,7 @@
 import Foundation
 
 struct HotelsViewModelFactory {
-    static func makeListHotelViewModel() -> ListHotelsViewModel {
-        let networkService = NetworkService()
-        let decoder = Decoder()
-        let hotelService = HotelService(
-            networkService: networkService,
-            decoder: decoder
-        )
+    static func makeListHotelViewModel(hotelService: HotelServiceProtocol) -> ListHotelsViewModel {
         return ListHotelsViewModel(hotelService: hotelService)
     }
 }

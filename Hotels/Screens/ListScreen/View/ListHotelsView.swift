@@ -3,9 +3,13 @@ import SwiftUI
 
 struct ListHotelsView: View {
     @EnvironmentObject private var coordinator: Coordinator
-    @StateObject private var vm = HotelsViewModelFactory.makeListHotelViewModel()
+    @StateObject private var vm: ListHotelsViewModel
     @State private var currentSorting: FilterButtonView.SortingType?
     @State private var showErrorAlert: Bool = false
+    
+    init(vm: ListHotelsViewModel) {
+        _vm = StateObject(wrappedValue: vm)
+    }
     
     var body: some View {
         ZStack {
@@ -74,8 +78,4 @@ private extension ListHotelsView {
             }
         }
     }
-}
-
-#Preview {
-    ListHotelsView()
 }

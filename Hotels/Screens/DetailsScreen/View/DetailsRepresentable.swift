@@ -7,9 +7,9 @@ struct DetailsRepresentable: UIViewControllerRepresentable {
     
     let hotelID: Int
     
-    init(hotelID: Int) {
+    init(hotelID: Int, hotelService: HotelServiceProtocol) {
         self.hotelID = hotelID
-        _viewModel = StateObject(wrappedValue: DetailsViewModelFactory.makeDetailsViewModel(for: hotelID))
+        _viewModel = StateObject(wrappedValue: DetailsViewModelFactory.makeDetailsViewModel(hotelService: hotelService, for: hotelID))
     }
     
     func makeUIViewController(context: Context) -> DetailsViewController {
