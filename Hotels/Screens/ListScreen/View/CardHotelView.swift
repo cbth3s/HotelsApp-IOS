@@ -23,7 +23,6 @@ struct CardHotelView: View {
         .overlay {
             RoundedRectangle(cornerRadius: 10)
                 .stroke(.accent, lineWidth: 2)
-                
         }
         .onTapGesture {
             action()
