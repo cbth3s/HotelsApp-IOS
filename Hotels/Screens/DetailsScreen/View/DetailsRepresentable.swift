@@ -5,11 +5,8 @@ struct DetailsRepresentable: UIViewControllerRepresentable {
     @EnvironmentObject private var coordinator: Coordinator
     @StateObject private var viewModel: DetailsViewModel
     
-    let hotelID: Int
-    
-    init(hotelID: Int, hotelService: HotelServiceProtocol) {
-        self.hotelID = hotelID
-        _viewModel = StateObject(wrappedValue: DetailsViewModelFactory.makeDetailsViewModel(hotelService: hotelService, for: hotelID))
+    init(viewModel: DetailsViewModel) {
+        _viewModel = StateObject(wrappedValue: viewModel)
     }
     
     func makeUIViewController(context: Context) -> DetailsViewController {

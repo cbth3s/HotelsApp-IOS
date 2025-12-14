@@ -19,9 +19,11 @@ final class Coordinator: ObservableObject {
     func makeView(_ route: Screen) -> some View {
         switch route {
         case .listHotels:
-            ListHotelsView(vm: HotelsViewModelFactory.makeListHotelViewModel(hotelService: hotelService)).environmentObject(self)
+            let viewModel = HotelsViewModelFactory.makeListHotelViewModel(hotelService: hotelService)
+            ListHotelsView(vm: viewModel).environmentObject(self)
         case .detailsHotel(let hotelID):
-            DetailsRepresentable(hotelID: hotelID, hotelService: hotelService).environmentObject(self)
+            let viewModel = DetailsViewModelFactory.makeDetailsViewModel(hotelService: hotelService, for: hotelID)
+            DetailsRepresentable(viewModel: viewModel).environmentObject(self)
         }
     }
     
