@@ -5,7 +5,7 @@ import UIKit
 @MainActor
 final class DetailsViewModel: ObservableObject {
     @Published private(set) var details: DetailsHotelModel?
-    @Published private(set) var imageData: Data?
+    @Published private(set) var imageData: UIImage?
     @Published private(set) var isLoading: Bool = false
     @Published private(set) var isLoadingImage: Bool = false
     @Published private(set) var error: Error?
@@ -52,19 +52,24 @@ private extension DetailsViewModel {
         isLoadingImage = true
         do {
             let data = try await hotelService.loadImage(image: imageID)
-            let croppedImage = cropOnePixelBorder(from: data)
+            guard let originalImage = UIImage(data: data) else {
+                self.error = URLError(.cannotDecodeContentData)
+                isLoadingImage = false
+                return
+            }
+            let croppedImage = cropOnePixelBorder(from: originalImage)
             await MainActor.run {
-                self.imageData = croppedImage ?? data
+                self.imageData = croppedImage ?? originalImage
             }
         } catch {
             print("FAILED TO LOAD IMAGE: \(error.localizedDescription)")
+            self.error = error
         }
         isLoadingImage = false
     }
     
-    private func cropOnePixelBorder(from data: Data) -> Data? {
-        guard let image = UIImage(data: data),
-              let cgImage = image.cgImage else {
+    private func cropOnePixelBorder(from image: UIImage) -> UIImage? {
+        guard let cgImage = image.cgImage else {
             return nil
         }
 
@@ -77,6 +82,6 @@ private extension DetailsViewModel {
         let croppedImage = UIImage(cgImage: croppedCGImage,
                                    scale: image.scale,
                                    orientation: image.imageOrientation)
-        return croppedImage.jpegData(compressionQuality: 1.0) ?? croppedImage.pngData()
+        return croppedImage
     }
 }

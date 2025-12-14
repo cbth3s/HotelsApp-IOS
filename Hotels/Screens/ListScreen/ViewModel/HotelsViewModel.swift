@@ -15,7 +15,6 @@ final class ListHotelsViewModel: ObservableObject {
         self.hotelService = hotelService
     }
     
-    
     func loadData() async {
         isLoading = true
         error = nil

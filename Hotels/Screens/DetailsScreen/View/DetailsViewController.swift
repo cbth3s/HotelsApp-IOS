@@ -159,7 +159,7 @@ class DetailsViewController: UIViewController {
             imageLoadingIndicator.centerYAnchor.constraint(equalTo: hotelImageView.centerYAnchor),
             
             activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            activityIndicator.topAnchor.constraint(equalTo: hotelImageView.bottomAnchor, constant: 50),
             
             starsLabel.topAnchor.constraint(equalTo: hotelImageView.bottomAnchor, constant: 16),
             starsLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
@@ -255,18 +255,17 @@ class DetailsViewController: UIViewController {
         present(alert, animated: true)
     }
     
-    private func updateHotelImage(with imageData: Data?) {
+    private func updateHotelImage(with image: UIImage?) {
         imageLoadingIndicator.stopAnimating()
         imageLoadingIndicator.isHidden = true
         
-        guard let imageData = imageData, let image = UIImage(data: imageData) else {
+        guard let image = image else {
             hotelImageView.image = nil
             return
         }
         
         hotelImageView.image = image
         hotelImageView.contentMode = .scaleAspectFill
-        
     }
     
     private func showMainLoading() {
