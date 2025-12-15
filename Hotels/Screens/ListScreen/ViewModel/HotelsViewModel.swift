@@ -33,16 +33,32 @@ extension ListHotelsViewModel {
         "\(value)"
     }
     
-    func sortedByRooms() async {
-        hotels = hotels.sorted(by: { getFreeRoomsCount($0.suitesAvailability) > getFreeRoomsCount($1.suitesAvailability) })
-    }
-    
-    func sortedByDistance() async {
-        hotels = hotels.sorted(by: {$0.distance < $1.distance })
-    }
-    
     func getFreeRoomsCount(_ value: String) -> Int {
         guard !value.isEmpty else { return 0 }
         return value.reduce(0) { $0 + ($1 == ":" ? 1 : 0) } + 1
+    }
+    
+    enum SortKey {
+        case byDistance, byRooms
+    }
+    enum SortOrder {
+        case ascending, descending
+    }
+    
+    func sortHotels(by key: SortKey, order: SortOrder) async {
+        switch key {
+        case .byDistance:
+            if order == .ascending {
+                hotels = hotels.sorted { $0.distance < $1.distance }
+            } else {
+                hotels = hotels.sorted { $0.distance > $1.distance }
+            }
+        case .byRooms:
+            if order == .ascending {
+                hotels = hotels.sorted { getFreeRoomsCount($0.suitesAvailability) < getFreeRoomsCount($1.suitesAvailability) }
+            } else {
+                hotels = hotels.sorted { getFreeRoomsCount($0.suitesAvailability) > getFreeRoomsCount($1.suitesAvailability) }
+            }
+        }
     }
 }

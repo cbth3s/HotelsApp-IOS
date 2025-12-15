@@ -3,6 +3,10 @@ import SwiftUI
 
 struct FilterButtonView: View {
     @Binding var currentSorting: SortingType?
+    
+    let distanceSortOrder: ListHotelsViewModel.SortOrder
+    let roomsSortOrder: ListHotelsViewModel.SortOrder
+    
     let sortByDistance: () -> Void
     let sortByRooms: () -> Void
     
@@ -20,7 +24,7 @@ struct FilterButtonView: View {
                     Text("By Distance")
                     Spacer()
                     if currentSorting == .distance {
-                        Image(systemName: "checkmark")
+                        Image(systemName: distanceSortOrder == .ascending ? "arrow.up" : "arrow.down")
                             .foregroundStyle(.blue)
                     }
                 }
@@ -33,7 +37,7 @@ struct FilterButtonView: View {
                     Text("By Rooms")
                     Spacer()
                     if currentSorting == .rooms {
-                        Image(systemName: "checkmark")
+                        Image(systemName: roomsSortOrder == .ascending ? "arrow.up" : "arrow.down")
                             .foregroundStyle(.blue)
                     }
                 }
@@ -56,7 +60,7 @@ private extension FilterButtonView {
         case .rooms:
             return "door.right.hand.open"
         case .none:
-            return "slider.vertical.3"
+            return "arrow.up.arrow.down"
         }
     }
 }

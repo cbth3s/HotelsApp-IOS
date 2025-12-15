@@ -4,8 +4,11 @@ import SwiftUI
 struct ListHotelsView: View {
     @EnvironmentObject private var coordinator: Coordinator
     @StateObject private var vm: ListHotelsViewModel
+    
     @State private var currentSorting: FilterButtonView.SortingType?
     @State private var showErrorAlert: Bool = false
+    @State private var distanceSortOrder: ListHotelsViewModel.SortOrder = .ascending
+    @State private var roomsSortOrder: ListHotelsViewModel.SortOrder = .ascending
     
     init(vm: ListHotelsViewModel) {
         _vm = StateObject(wrappedValue: vm)
@@ -61,17 +64,25 @@ private extension ListHotelsView {
     @ToolbarContentBuilder
     private var toolbarItems: some ToolbarContent {
         ToolbarItem(placement: .topBarTrailing) {
-            FilterButtonView(currentSorting: $currentSorting) {
+            FilterButtonView(
+                currentSorting: $currentSorting,
+                distanceSortOrder: distanceSortOrder,
+                roomsSortOrder: roomsSortOrder
+            ) {
                 Task {
-                    await vm.sortedByDistance()
+                    let newOrder: ListHotelsViewModel.SortOrder = (distanceSortOrder == .ascending) ? .descending : .ascending
+                    await vm.sortHotels(by: .byDistance, order: newOrder)
                     await MainActor.run {
+                        distanceSortOrder = newOrder
                         currentSorting = .distance
                     }
                 }
             } sortByRooms: {
                 Task {
-                    await vm.sortedByRooms()
+                    let newOrder: ListHotelsViewModel.SortOrder = (roomsSortOrder == .ascending) ? .descending : .ascending
+                    await vm.sortHotels(by: .byRooms, order: newOrder)
                     await MainActor.run {
+                        roomsSortOrder = newOrder
                         currentSorting = .rooms
                     }
                 }
