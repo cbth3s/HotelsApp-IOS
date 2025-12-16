@@ -35,7 +35,7 @@ extension ListHotelsViewModel {
     
     func getFreeRoomsCount(_ value: String) -> Int {
         guard !value.isEmpty else { return 0 }
-        return value.reduce(0) { $0 + ($1 == ":" ? 1 : 0) } + 1
+        return value.split(separator: ":").count
     }
     
     enum SortKey {
