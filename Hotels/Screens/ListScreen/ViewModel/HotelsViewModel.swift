@@ -45,7 +45,7 @@ extension ListHotelsViewModel {
         case ascending, descending
     }
     
-    func sortHotels(by key: SortKey, order: SortOrder) async {
+    func sortHotels(by key: SortKey, order: SortOrder) {
         switch key {
         case .byDistance:
             if order == .ascending {
@@ -54,10 +54,12 @@ extension ListHotelsViewModel {
                 hotels = hotels.sorted { $0.distance > $1.distance }
             }
         case .byRooms:
+            let hotelsWithKeys = hotels.map { (hotel: $0, rooms: getFreeRoomsCount($0.suitesAvailability)) }
+            
             if order == .ascending {
-                hotels = hotels.sorted { getFreeRoomsCount($0.suitesAvailability) < getFreeRoomsCount($1.suitesAvailability) }
+                hotels = hotelsWithKeys.sorted { $0.rooms < $1.rooms }.map { $0.hotel }
             } else {
-                hotels = hotels.sorted { getFreeRoomsCount($0.suitesAvailability) > getFreeRoomsCount($1.suitesAvailability) }
+                hotels = hotelsWithKeys.sorted { $0.rooms > $1.rooms }.map { $0.hotel }
             }
         }
     }

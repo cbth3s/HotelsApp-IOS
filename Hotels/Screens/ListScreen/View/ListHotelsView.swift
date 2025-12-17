@@ -69,23 +69,15 @@ private extension ListHotelsView {
                 distanceSortOrder: distanceSortOrder,
                 roomsSortOrder: roomsSortOrder
             ) {
-                Task {
-                    let newOrder: ListHotelsViewModel.SortOrder = (distanceSortOrder == .ascending) ? .descending : .ascending
-                    await vm.sortHotels(by: .byDistance, order: newOrder)
-                    await MainActor.run {
-                        distanceSortOrder = newOrder
-                        currentSorting = .distance
-                    }
-                }
+                let newOrder: ListHotelsViewModel.SortOrder = (distanceSortOrder == .ascending) ? .descending : .ascending
+                vm.sortHotels(by: .byDistance, order: newOrder)
+                distanceSortOrder = newOrder
+                currentSorting = .distance
             } sortByRooms: {
-                Task {
-                    let newOrder: ListHotelsViewModel.SortOrder = (roomsSortOrder == .ascending) ? .descending : .ascending
-                    await vm.sortHotels(by: .byRooms, order: newOrder)
-                    await MainActor.run {
-                        roomsSortOrder = newOrder
-                        currentSorting = .rooms
-                    }
-                }
+                let newOrder: ListHotelsViewModel.SortOrder = (roomsSortOrder == .ascending) ? .descending : .ascending
+                vm.sortHotels(by: .byRooms, order: newOrder)
+                roomsSortOrder = newOrder
+                currentSorting = .rooms
             }
         }
     }
